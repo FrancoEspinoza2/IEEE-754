@@ -26,11 +26,35 @@ uint8_t const bias = 127U;
  * Students should create or add any functions or classes they may need.
  */
 float ieee_754(uint32_t const data) {
-    float value;
-    // This will fail the tests. Students should do the proper IEEE-754 calculation per assignment
-    // using the 32 bit 'data' value passed into this function.
-    value = 1.23;
-    return value;
+   // Extract sign (1 bit)
+   uint32_t sign = (data > > 31) & 0x1
+   //Extract exponet ( 8 bit ) 
+   uint32_t exponent = (data > > 23) & 0xFF
+   //Extract mantissa (23 bits)
+   uint32_t mantissa = data & 0x7FFFFF;
+
+   //Handle special cases 
+   if (exponent == 255) {
+   if (mantissa == 0) { 
+     //infinity 
+     return sign ? -INFINITY : INFINITY; 
+   } else { 
+    //NaN
+   return NAN;
+   }
+   } esle if (exponent == 0) {
+if (mantissa == 0) {
+return sign ? -0.0f : 0.0f;
+} esle {
+   float frac = mantissa / static_cast < float > (1 < < 23);
+    float value = std::idexp(frac, -126);
+   return sign ? -value : value; 
+   }
+} esle {
+    float fracc = 1.0f + mantissa / static_cast < float > (1 < < 23);
+    int exp = static_cast < int > (exponent) - 12;
+    return sign ? -value : value;
+}
 }
 
 /*
